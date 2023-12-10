@@ -14,6 +14,7 @@ namespace VeriBot.DiscordModules.RankRoles;
 
 [SlashCommandGroup("RankRoles", "Rank role management commands")]
 [SlashRequireGuild]
+[SlashRequireOwner]
 public class RankRoleSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly CancellationService _cancellationService;

@@ -17,6 +17,7 @@ namespace VeriBot.DiscordModules.RankRoles;
 [Description("Rank role management commands")]
 [RequireGuild]
 [RequireUserPermissions(Permissions.ManageRoles)]
+[RequireOwner]
 public class RankRoleCommands : TypingCommandModule
 {
     private readonly CancellationService _cancellationService;
