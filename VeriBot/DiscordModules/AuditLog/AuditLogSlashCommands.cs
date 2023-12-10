@@ -1,4 +1,5 @@
-﻿using DSharpPlus.Entities;
+﻿using DSharpPlus;
+using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,7 @@ namespace VeriBot.DiscordModules.AuditLog;
 
 [SlashCommandGroup("AuditLog", "Commands for interacting with the audit log")]
 [SlashRequireGuild]
+[SlashRequireUserPermissions(Permissions.Administrator)]
 public class AuditLogSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly AuditLogProvider _auditLogProvider;
