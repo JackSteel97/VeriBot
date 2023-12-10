@@ -1,4 +1,5 @@
 ﻿using DSharpPlus;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.Attributes;
@@ -49,6 +50,7 @@ public class ConfigSlashCommands : InstrumentedApplicationCommandModule
 
     [SlashCommand("ToggleLevelMentions", "Toggles you getting pinged for level up alerts for this server")]
     [SlashCooldown(6, 300, SlashCooldownBucketType.Channel)]
+    [RequireOwner]
     public async Task ToggleLevelMentions(InteractionContext context)
     {
         bool newSetting = await _configDataHelper.ToggleLevelMentions(context.Guild.Id, context.User.Id);
