@@ -19,6 +19,7 @@ namespace VeriBot.DiscordModules.Triggers;
 [Aliases("trigger", "t")]
 [Description("Trigger management commands")]
 [RequireGuild]
+[RequireOwner]
 public class TriggerCommands : TypingCommandModule
 {
     private readonly DataHelpers _dataHelpers;
