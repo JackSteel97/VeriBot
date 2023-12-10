@@ -73,14 +73,15 @@ public class IncomingMessageHandler
                 await _petsDataHelper.PetXpUpdated(availablePets, messageArgs.Guild, copyOfUser.CurrentLevel);
             }
 
-            if (user.ConsecutiveDaysActive != copyOfUser.ConsecutiveDaysActive)
-            {
-                // Streak changed - new day.
-                await _petCommandsChannel.Write(new PetCommandAction(PetCommandActionType.CheckForDeath, null, (DiscordMember)messageArgs.User, messageArgs.Guild), _cancellationService.Token);
-
-                ulong xpEarned = copyOfUser.UpdateStreakXp();
-                if (xpEarned > 0) _levelMessageSender.SendStreakMessage(messageArgs.Guild, messageArgs.User, copyOfUser.ConsecutiveDaysActive, xpEarned);
-            }
+            // Re-enable if streak xp is needed.
+            // if (user.ConsecutiveDaysActive != copyOfUser.ConsecutiveDaysActive)
+            // {
+            //     // Streak changed - new day.
+            //     await _petCommandsChannel.Write(new PetCommandAction(PetCommandActionType.CheckForDeath, null, (DiscordMember)messageArgs.User, messageArgs.Guild), _cancellationService.Token);
+            //
+            //     ulong xpEarned = copyOfUser.UpdateStreakXp();
+            //     if (xpEarned > 0) _levelMessageSender.SendStreakMessage(messageArgs.Guild, messageArgs.User, copyOfUser.ConsecutiveDaysActive, xpEarned);
+            // }
 
             await _usersProvider.UpdateUser(messageArgs.Guild.Id, copyOfUser);
 

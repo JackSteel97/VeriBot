@@ -155,14 +155,15 @@ public class VoiceStateChangeHandler
             var availablePets = _petsDataHelper.GetAvailablePets(guildId, userId, out _);
             copyOfUser.VoiceStateChange(newState, availablePets, scalingFactor, shouldEarnVideoXp);
 
-            if (user.ConsecutiveDaysActive != copyOfUser.ConsecutiveDaysActive)
-            {
-                // Streak changed - new day.
-                await _petCommandsChannel.Write(new PetCommandAction(PetCommandActionType.CheckForDeath, null, discordUser, guild), _cancellationService.Token);
-
-                ulong xpEarned = copyOfUser.UpdateStreakXp();
-                if (xpEarned > 0) _levelMessageSender.SendStreakMessage(guild, discordUser, copyOfUser.ConsecutiveDaysActive, xpEarned);
-            }
+            // Re-enable if streak xp is needed.
+            // if (user.ConsecutiveDaysActive != copyOfUser.ConsecutiveDaysActive)
+            // {
+            //     // Streak changed - new day.
+            //     await _petCommandsChannel.Write(new PetCommandAction(PetCommandActionType.CheckForDeath, null, discordUser, guild), _cancellationService.Token);
+            //
+            //     ulong xpEarned = copyOfUser.UpdateStreakXp();
+            //     if (xpEarned > 0) _levelMessageSender.SendStreakMessage(guild, discordUser, copyOfUser.ConsecutiveDaysActive, xpEarned);
+            // }
 
             if (scalingFactor != 0)
             {
