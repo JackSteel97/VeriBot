@@ -323,14 +323,12 @@ public class BotMain : IHostedService
         _commands.RegisterCommands<TriggerCommands>();
         _commands.RegisterCommands<FeedbackCommands>();
         _commands.RegisterCommands<FunCommands>();
-        _commands.RegisterCommands<MiscCommands>();
         _commands.RegisterCommands<PetsCommands>();
 
         _commands.SetHelpFormatter<CustomHelpFormatter>();
 
         _slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = _serviceProvider });
 
-        _slashCommands.RegisterCommands<MiscSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<StatsSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<PuzzleSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<PetsSlashCommands>(_testServerId);

@@ -7,6 +7,5 @@ public class ApplicationConfig
     public string UnknownCommandResponse { get; set; }
     public ulong CommonServerId { get; set; }
     public ulong CreatorUserId { get; set; }
-    public string InviteLink { get; set; }
     public LevellingConfig Levelling { get; set; }
 }
