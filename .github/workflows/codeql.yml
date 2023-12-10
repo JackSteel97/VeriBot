@@ -19,6 +19,10 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '45 8 * * 0'
+    
+permissions:
+  statuses: write
+  checks: write
 
 jobs:
   analyze:

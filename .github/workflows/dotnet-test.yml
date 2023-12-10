@@ -5,6 +5,10 @@ on:
     branches: [ "main", "dev" ]
   pull_request:
     branches: [ "main" ]
+    
+permissions:
+  statuses: write
+  checks: write
 
 jobs:
   build:
