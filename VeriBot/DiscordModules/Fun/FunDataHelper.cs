@@ -8,7 +8,7 @@ public class FunDataHelper
 {
     public static async Task<Stream> GetMotivationalQuote()
     {
-        var client = new RestClient("http://inspirobot.me/");
+        var client = new RestClient("https://inspirobot.me/");
         var request = new RestRequest("api");
         request.AddQueryParameter("generate", "true");
 

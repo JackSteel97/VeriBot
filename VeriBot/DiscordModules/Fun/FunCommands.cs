@@ -19,25 +19,12 @@ namespace VeriBot.DiscordModules.Fun;
 public class FunCommands : TypingCommandModule
 {
     private readonly DataCache _cache;
-    private readonly DataHelpers _dataHelpers;
     private readonly ILogger<FunCommands> _logger;
 
-    public FunCommands(DataHelpers dataHelpers, DataCache cache, ILogger<FunCommands> logger, AuditLogService auditLogService) : base(logger, auditLogService)
+    public FunCommands( DataCache cache, ILogger<FunCommands> logger, AuditLogService auditLogService) : base(logger, auditLogService)
     {
-        _dataHelpers = dataHelpers;
         _cache = cache;
         _logger = logger;
-    }
-
-    [Command("Joke")]
-    [Aliases("j")]
-    [Description("Gets a joke courtesy of [Jokes.One](https://jokes.one/)")]
-    [Cooldown(3, 60, CooldownBucketType.Channel)]
-    public async Task TellMeAJoke(CommandContext context)
-    {
-        var jokeWrapper = await _cache.Fun.GetJoke();
-        var joke = jokeWrapper.Jokes[0];
-        await context.RespondAsync(EmbedGenerator.Info(joke.Joke.Text, "Joke of The Day", $"© {jokeWrapper.Copyright}"));
     }
 
     [Command("Inspo")]

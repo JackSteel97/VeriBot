@@ -20,31 +20,18 @@ public class FunSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly ErrorHandlingService _errorHandlingService;
     private readonly ExceptionProvider _exceptionProvider;
-    private readonly FunProvider _funProvider;
     private readonly ILogger<FunSlashCommands> _logger;
 
     /// <inheritdoc />
-    public FunSlashCommands(FunProvider funProvider,
+    public FunSlashCommands(
         ILogger<FunSlashCommands> logger,
         ErrorHandlingService errorHandlingService,
         ExceptionProvider exceptionProvider,
         AuditLogService auditLogService) : base(logger, auditLogService)
     {
-        _funProvider = funProvider;
         _logger = logger;
         _errorHandlingService = errorHandlingService;
         _exceptionProvider = exceptionProvider;
-    }
-
-    [SlashCommand("Joke", "Gets a joke courtesy of [Jokes.One](https://jokes.one/)")]
-    [SlashCooldown(3, 60, SlashCooldownBucketType.Channel)]
-    public async Task TellMeAJoke(InteractionContext context)
-    {
-        _logger.LogInformation("[Slash Command] User {UserId} requested today's Joke", context.User.Id);
-        var jokeWrapper = await _funProvider.GetJoke();
-        var joke = jokeWrapper.Jokes[0];
-        var responder = new InteractionResponder(context, _errorHandlingService);
-        responder.Respond(new DiscordMessageBuilder().WithEmbed(EmbedGenerator.Info(joke.Joke.Text, "Joke of the Day", $"© {jokeWrapper.Copyright}")));
     }
 
     [SlashCommand("Inspiration", "Gets an AI generated motivational quote image")]
