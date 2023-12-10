@@ -15,6 +15,7 @@ namespace VeriBot.DiscordModules.Stats;
 
 [SlashCommandGroup("Stats", "Commands for viewing user stats and levels")]
 [SlashRequireGuild]
+[SlashRequireOwner]
 public class StatsSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly CancellationService _cancellationService;
