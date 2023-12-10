@@ -329,12 +329,12 @@ public class BotMain : IHostedService
 
         _slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = _serviceProvider });
 
-        _slashCommands.RegisterCommands<StatsSlashCommands>(_testServerId);
-        _slashCommands.RegisterCommands<PuzzleSlashCommands>(_testServerId);
-        _slashCommands.RegisterCommands<PetsSlashCommands>(_testServerId);
+        //_slashCommands.RegisterCommands<StatsSlashCommands>(_testServerId);
+        //_slashCommands.RegisterCommands<PuzzleSlashCommands>(_testServerId);
+        //_slashCommands.RegisterCommands<PetsSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<ConfigSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<FunSlashCommands>(_testServerId);
-        _slashCommands.RegisterCommands<RankRoleSlashCommands>(_testServerId);
+        //_slashCommands.RegisterCommands<RankRoleSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<RolesSlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<UtilitySlashCommands>(_testServerId);
         _slashCommands.RegisterCommands<AuditLogSlashCommands>(_testServerId);
