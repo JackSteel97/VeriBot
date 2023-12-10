@@ -22,6 +22,7 @@ namespace VeriBot.DiscordModules.Pets;
 [Aliases("Pets")]
 [Description("Commands for interacting with user pets")]
 [RequireGuild]
+[RequireOwner]
 public class PetsCommands : TypingCommandModule
 {
     private readonly RateLimit _bonusesRateLimit;

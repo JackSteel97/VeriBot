@@ -15,6 +15,7 @@ namespace VeriBot.DiscordModules.Pets;
 
 [SlashCommandGroup("Pets", "Commands for interacting with user pets")]
 [SlashRequireGuild]
+[SlashRequireOwner]
 public class PetsSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly RateLimit _bonusesRateLimit;
