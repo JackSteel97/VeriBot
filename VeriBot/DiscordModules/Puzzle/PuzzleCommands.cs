@@ -14,6 +14,7 @@ namespace VeriBot.DiscordModules.Puzzle;
 [Aliases("Question")]
 [RequireGuild]
 [Description("Commands for playing the puzzle.")]
+[RequireOwner]
 public class PuzzleCommands : TypingCommandModule
 {
     private const string _puzzleRequirements = "\n\n**You will need:**\nA web browser\n7-Zip\nAn image editing program - e.g. Photoshop / Paint.NET\nAn Audio editing program - e.g. Audacity";

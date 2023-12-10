@@ -14,6 +14,7 @@ namespace VeriBot.DiscordModules.Puzzle;
 
 [SlashCommandGroup("Puzzle", "Commands for playing the puzzle")]
 [SlashRequireGuild]
+[SlashRequireOwner]
 public class PuzzleSlashCommands : InstrumentedApplicationCommandModule
 {
     private readonly CancellationService _cancellationService;
