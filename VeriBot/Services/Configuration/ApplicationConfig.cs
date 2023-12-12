@@ -7,5 +7,6 @@ public class ApplicationConfig
     public string UnknownCommandResponse { get; set; }
     public ulong CommonServerId { get; set; }
     public ulong CreatorUserId { get; set; }
+    public ulong HaslamUserId { get; set; }
     public LevellingConfig Levelling { get; set; }
 }

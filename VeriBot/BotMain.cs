@@ -44,6 +44,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using VeriBot.Channels;
+using VeriBot.Channels.GuildMemberUpdated;
 using VeriBot.Channels.Message;
 using VeriBot.Channels.Pets;
 using VeriBot.Channels.Puzzle;
@@ -107,6 +108,7 @@ public class BotMain : IHostedService
     private readonly PetCommandsChannel _petCommandsChannel;
     private readonly StatsCommandsChannel _statsCommandsChannel;
     private readonly PuzzleCommandsChannel _puzzleCommandsChannel;
+    private readonly GuildMemberUpdatedChannel _memberUpdatedChannel;
 
     public BotMain(AppConfigurationService appConfigurationService,
         ILogger<BotMain> logger,
@@ -126,7 +128,8 @@ public class BotMain : IHostedService
         StatsCommandsChannel statsCommandsChannel,
         PuzzleCommandsChannel puzzleCommandsChannel,
         AuditLogService auditLogService,
-        UserTrackingService userTrackingService)
+        UserTrackingService userTrackingService,
+        GuildMemberUpdatedChannel memberUpdatedChannel)
     {
         _appConfigurationService = appConfigurationService;
         _logger = logger;
@@ -147,6 +150,7 @@ public class BotMain : IHostedService
         _puzzleCommandsChannel = puzzleCommandsChannel;
         _auditLogService = auditLogService;
         _userTrackingService = userTrackingService;
+        _memberUpdatedChannel = memberUpdatedChannel;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -201,6 +205,7 @@ public class BotMain : IHostedService
         _petCommandsChannel.Start(_cancellationService.Token);
         _statsCommandsChannel.Start(_cancellationService.Token);
         _puzzleCommandsChannel.Start(_cancellationService.Token);
+        _memberUpdatedChannel.Start(_cancellationService.Token);
     }
 
     private void InitHandlers()
@@ -214,6 +219,7 @@ public class BotMain : IHostedService
         _client.GuildAvailable += HandleGuildAvailable;
         _client.GuildMemberAdded += HandleGuildMemberAdded;
         _client.MessageReactionAdded += HandleMessageReactionAdded;
+        _client.GuildMemberUpdated += HandleGuildMemberUpdated;
 
         _commands.CommandErrored += HandleCommandErrored;
         _commands.CommandExecuted += HandleCommandExecuted;
@@ -221,6 +227,11 @@ public class BotMain : IHostedService
         _slashCommands.SlashCommandErrored += HandleSlashCommandErrored;
         _slashCommands.SlashCommandInvoked += HandleSlashCommandInvoked;
         _slashCommands.SlashCommandExecuted += HandleSlashCommandExecuted;
+    }
+
+    private async Task HandleGuildMemberUpdated(DiscordClient sender, GuildMemberUpdateEventArgs args)
+    {
+        await _memberUpdatedChannel.Write(args, _cancellationService.Token);
     }
 
     private async Task HandleSlashCommandExecuted(SlashCommandsExtension sender, SlashCommandExecutedEventArgs e)

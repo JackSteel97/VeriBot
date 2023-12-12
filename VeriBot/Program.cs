@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using VeriBot.Channels.GuildMemberUpdated;
 using VeriBot.Channels.Message;
 using VeriBot.Channels.Pets;
 using VeriBot.Channels.Puzzle;
@@ -214,6 +215,12 @@ public static class Program
 
         serviceProvider.AddSingleton<AuditLogProvider>();
         serviceProvider.AddSingleton<AuditLogService>();
+
+        serviceProvider.AddSingleton<NotifierService>();
+
+        serviceProvider.AddSingleton<GuildMemberUpdatedChannel>();
+        serviceProvider.AddSingleton<MemberUpdatedHandler>();
+        
     }
 
     public static async Task Main(string[] args)

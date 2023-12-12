@@ -48,10 +48,10 @@ public class ErrorHandlingService
 
     private async Task SendMessageToJack(Exception e, string source)
     {
-        ulong civlationId = _appConfigurationService.Application.CommonServerId;
+        ulong commonServerId = _appConfigurationService.Application.CommonServerId;
         ulong jackId = _appConfigurationService.Application.CreatorUserId;
 
-        var commonServer = await _client.GetGuildAsync(civlationId);
+        var commonServer = await _client.GetGuildAsync(commonServerId);
         var jack = await commonServer.GetMemberAsync(jackId);
 
         await jack.SendMessageAsync(EmbedGenerator.Info(
