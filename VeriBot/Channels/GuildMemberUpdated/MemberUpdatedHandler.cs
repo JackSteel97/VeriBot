@@ -1,5 +1,4 @@
-﻿using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
+﻿using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,8 +12,8 @@ public class MemberUpdatedHandler
 {
     private readonly NotifierService _notifierService;
     private readonly ILogger<MemberUpdatedHandler> _logger;
-    private static readonly HashSet<ulong> _triggerRoleIds = new() { 782242726401409074 };
-    private const ulong _newRoleId = 782242483156549632;
+    private static readonly HashSet<ulong> _triggerRoleIds = new() { 1136781629948428369, 1161704036244930661  };
+    private const ulong _newRoleId = 1137369187652747295;
     
     public MemberUpdatedHandler(NotifierService notifierService, ILogger<MemberUpdatedHandler> logger)
     {

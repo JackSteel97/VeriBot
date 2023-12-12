@@ -7,7 +7,7 @@ using VeriBot.Services.Configuration;
 
 namespace VeriBot.Services;
 
-public class NotifierService
+public class NotifierService 
 {
     private readonly DiscordClient _client;
     private readonly ILogger<NotifierService> _logger;
