@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DSharpPlus.Entities;
+using System;
 using System.Threading.Tasks;
 using VeriBot.Channels.Stats;
 using VeriBot.DataProviders.SubProviders;
@@ -10,15 +11,15 @@ namespace VeriBot.DiscordModules.Stats.Services;
 
 public class StatsCardService
 {
-    private readonly LevelCardGenerator _levelCardGenerator;
+    //private readonly LevelCardGenerator _levelCardGenerator;
     private readonly UserLockingService _userLockingService;
     private readonly UsersProvider _usersProvider;
 
-    public StatsCardService(UserLockingService userLockingService, UsersProvider usersProvider, LevelCardGenerator levelCardGenerator)
+    public StatsCardService(UserLockingService userLockingService, UsersProvider usersProvider /*, LevelCardGenerator levelCardGenerator*/)
     {
         _userLockingService = userLockingService;
         _usersProvider = usersProvider;
-        _levelCardGenerator = levelCardGenerator;
+        //_levelCardGenerator = levelCardGenerator;
     }
 
     public async Task View(StatsCommandAction request)
@@ -32,12 +33,17 @@ public class StatsCardService
                 request.Responder.Respond(StatsMessages.UnableToFindUser());
                 return;
             }
-
-            using (var imageStream = await _levelCardGenerator.GenerateCard(user, request.Target))
+            
+            var message = StatsMessages.GetStatsEmbed(user, request.Target.Username);
+            var msgBuilder = new DiscordMessageBuilder()
+                .WithEmbed(message);
+            request.Responder.Respond(msgBuilder);
+            
+            /*using (var imageStream = await _levelCardGenerator.GenerateCard(user, request.Target))
             {
                 var message = StatsMessages.StatsCard(user, request.Target.Username, imageStream);
                 request.Responder.Respond(message);
-            }
+            }*/
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using SixLabors.Fonts;
+﻿/*using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -70,4 +70,4 @@ public static class ImageContextExtensions
 
     public static void DrawSimpleText(this IImageProcessingContext ctx, DrawingOptions opts, string text, Font font, Color color, float x, float y) =>
         ctx.DrawText(opts, text, font, color, new PointF(x, y));
-}
+}*/

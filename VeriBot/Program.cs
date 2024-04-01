@@ -47,7 +47,7 @@ namespace VeriBot;
 
 public static class Program
 {
-    private static readonly string _environment = Environment.GetEnvironmentVariable("VERIBOTENVIRONMENT") ?? "Production";
+    private static readonly string _environment = Environment.GetEnvironmentVariable("VERIBOTENVIRONMENT") ?? "Development";
 
     private static IServiceProvider ConfigureServices(IServiceCollection serviceProvider)
     {
@@ -164,7 +164,7 @@ public static class Program
         // TODO: Scope services?
         // Add custom services.
         serviceProvider.AddSingleton<UserTrackingService>();
-        serviceProvider.AddSingleton<LevelCardGenerator>();
+        //serviceProvider.AddSingleton<LevelCardGenerator>();
         serviceProvider.AddSingleton<PetFactory>();
 
         serviceProvider.AddSingleton<ErrorHandlingService>();

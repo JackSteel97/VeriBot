@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.Logging;
 using System;
 using VeriBot.Database.Models;
 using VeriBot.Database.Models.AuditLog;
@@ -29,16 +30,22 @@ public class VeriBotContext : DbContext
 
     public DbSet<Audit> AuditLog { get; set; }
 
-    public VeriBotContext(DbContextOptions<VeriBotContext> options) : base(options)
+    private readonly ILogger<VeriBotContext> _logger;
+
+    public VeriBotContext(DbContextOptions<VeriBotContext> options, ILogger<VeriBotContext> logger) : base(options)
     {
+        _logger = logger;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        _logger.LogInformation("Base on model creating");
         base.OnModelCreating(modelBuilder);
+        _logger.LogInformation("Base on model creating done");
 
         modelBuilder.Entity<Guild>(entity =>
         {
+            _logger.LogInformation("Guid entity");
             entity.HasKey(g => g.RowId);
             entity.HasIndex(g => g.DiscordId).IsUnique();
             entity.Property(g => g.CommandPrefix).HasDefaultValue("+");
@@ -46,6 +53,7 @@ public class VeriBotContext : DbContext
             entity.HasMany(g => g.SelfRoles).WithOne(sr => sr.Guild).HasForeignKey(sr => sr.GuildRowId).OnDelete(DeleteBehavior.NoAction);
             entity.HasMany(g => g.RankRoles).WithOne(rr => rr.Guild).HasForeignKey(rr => rr.GuildRowId).OnDelete(DeleteBehavior.NoAction);
             entity.HasMany(g => g.Triggers).WithOne(t => t.Guild).HasForeignKey(t => t.GuildRowId).OnDelete(DeleteBehavior.NoAction);
+            _logger.LogInformation("Guid entity done");
         });
 
         modelBuilder.Entity<User>(entity =>

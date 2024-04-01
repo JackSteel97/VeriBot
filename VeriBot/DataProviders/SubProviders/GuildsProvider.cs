@@ -32,7 +32,9 @@ public class GuildsProvider
         _logger.LogInformation("Loading data from database: Guilds");
         using (var db = _dbContextFactory.CreateDbContext())
         {
+            _logger.LogInformation("Getting Guild data from database");
             _guildsByDiscordId = db.Guilds.AsNoTracking().ToDictionary(g => g.DiscordId);
+            _logger.LogInformation("Getting Guild data from database done");
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using DSharpPlus;
+﻿/*using DSharpPlus;
 using DSharpPlus.Entities;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -153,4 +153,4 @@ public class LevelCardGenerator
 
         return avatar;
     }
-}
+}*/
