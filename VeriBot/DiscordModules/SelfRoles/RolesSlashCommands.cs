@@ -49,6 +49,7 @@ public class RolesSlashCommands : InstrumentedApplicationCommandModule
     }
 
     [SlashCommand("SendReactionMessage", "Sends the self assignment reaction message to the specified channel")]
+    [RequireUserPermissions(Permissions.ManageRoles)]
     [Cooldown(1, 60, CooldownBucketType.Channel)]
     public async Task SendReactionMessage(
         InteractionContext context,
