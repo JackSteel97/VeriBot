@@ -84,6 +84,13 @@ public class AuditLogService
         entry.Description = args.Emoji;
         return Log(entry);
     }
+    
+    public Task MessageReactionRemoved(MessageReactionRemoveEventArgs args)
+    {
+        var entry = new Audit(args.User.Id, args.User.Username, AuditAction.MessageReactionRemoved, args.Guild.Id, args.Guild.Name, args.Channel.Id, args.Channel.Name);
+        entry.Description = args.Emoji;
+        return Log(entry);
+    }
 
     private Task JoinVoiceChannel(VoiceStateChange change)
     {

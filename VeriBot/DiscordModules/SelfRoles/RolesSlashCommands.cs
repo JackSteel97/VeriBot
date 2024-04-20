@@ -24,7 +24,8 @@ public class RolesSlashCommands : InstrumentedApplicationCommandModule
     private readonly SelfRoleManagementChannel _selfRoleManagementChannel;
 
     /// <inheritdoc />
-    public RolesSlashCommands(RolesDataHelper rolesDataHelper,
+    public RolesSlashCommands(
+        RolesDataHelper rolesDataHelper,
         ErrorHandlingService errorHandlingService,
         CancellationService cancellationService,
         SelfRoleManagementChannel selfRoleManagementChannel,
@@ -43,8 +44,19 @@ public class RolesSlashCommands : InstrumentedApplicationCommandModule
     [Cooldown(1, 60, CooldownBucketType.Channel)]
     public Task ViewSelfRoles(InteractionContext context)
     {
-        _rolesDataHelper.DisplayRoles(context.Guild, new InteractionResponder(context, _errorHandlingService));
+        _rolesDataHelper.DisplayRoles(context.Client, context.Guild, new InteractionResponder(context, _errorHandlingService));
         return Task.CompletedTask;
+    }
+
+    [SlashCommand("SendReactionMessage", "Sends the self assignment reaction message to the specified channel")]
+    [Cooldown(1, 60, CooldownBucketType.Channel)]
+    public async Task SendReactionMessage(
+        InteractionContext context,
+        [Option("Channel", "Channel to send the message to")]
+        DiscordChannel channel)
+    {
+        await context.DeferAsync();
+        await _rolesDataHelper.SendReactionMessage(context.Client, context.Guild, channel);
     }
 
     [SlashCommand("JoinAll", "Join all available self roles")]
@@ -74,13 +86,28 @@ public class RolesSlashCommands : InstrumentedApplicationCommandModule
     [SlashCommand("Set", "Sets the given role as a self role that users can join themselves")]
     [SlashCooldown(10, 60, SlashCooldownBucketType.Guild)]
     [RequireUserPermissions(Permissions.ManageRoles)]
-    public async Task SetSelfRole(InteractionContext context,
+    public async Task SetSelfRole(
+        InteractionContext context,
         [Option("Role", "The role that should be set as a self role")]
         DiscordRole role,
         [Option("Description", "A description for the purpose of this role")]
-        string description)
+        string description,
+        [Option("Emoji", "An emoji users can react with to assign/unassign this role")]
+        string? emojiName = null)
     {
-        var action = new SelfRoleManagementAction(SelfRoleActionType.Create, new InteractionResponder(context, _errorHandlingService), context.Member, context.Guild, role.Name, description);
+        DiscordEmoji emoji = null;
+        if (!string.IsNullOrWhiteSpace(emojiName))
+        {
+            if (emojiName.StartsWith("<:"))
+            {
+                emojiName = $":{emojiName.Split(":")[1]}:";
+            }
+
+            emoji = DiscordEmoji.FromName(context.Client, emojiName);
+        }
+
+        var action = new SelfRoleManagementAction(SelfRoleActionType.Create, new InteractionResponder(context, _errorHandlingService), context.Member, context.Guild, role.Name, description,
+            emoji?.Id);
         await _selfRoleManagementChannel.Write(action, _cancellationService.Token);
     }
 

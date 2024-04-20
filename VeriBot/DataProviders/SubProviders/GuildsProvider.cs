@@ -50,6 +50,27 @@ public class GuildsProvider
 
         return prefix;
     }
+    
+    public (ulong? channel, ulong? message) GetGuildSelfRoleAssignmentMessageId(ulong discordId)
+    {
+        if (TryGetGuild(discordId, out var guild)) return (guild.SelfRolesAssignmentMessageChannelId, guild.SelfRolesAssignmentMessageId);
+
+        return (null, null);
+    }
+    
+    public async Task UpdateGuildSelfRoleAssignmentMessageId(ulong discordId, ulong selfRoleAssignmentMessageChannelId, ulong selfRoleAssignmentMessageId)
+    {
+        if (TryGetGuild(discordId, out var guild))
+        {
+            _logger.LogInformation("Updating Self Role Assignment Message for Guild [{GuildId}] to {MessageId} in {ChannelId}", guild.DiscordId, selfRoleAssignmentMessageId, selfRoleAssignmentMessageChannelId);
+            // Clone guild to avoid making change to cache till db change confirmed.
+            var copyOfGuild = guild.Clone();
+            copyOfGuild.SelfRolesAssignmentMessageChannelId = selfRoleAssignmentMessageChannelId;
+            copyOfGuild.SelfRolesAssignmentMessageId = selfRoleAssignmentMessageId;
+
+            await UpdateGuild(copyOfGuild);
+        }
+    }
 
     public async Task SetNewPrefix(ulong guildId, string newPrefix)
     {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VeriBot.Database;
@@ -11,9 +12,11 @@ using VeriBot.Database;
 namespace VeriBot.Migrations
 {
     [DbContext(typeof(VeriBotContext))]
-    partial class VeriBotContextModelSnapshot : ModelSnapshot
+    [Migration("20240420135022_Add channel for self role message")]
+    partial class Addchannelforselfrolemessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

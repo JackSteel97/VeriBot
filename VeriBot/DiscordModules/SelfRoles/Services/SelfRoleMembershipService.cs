@@ -1,5 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,26 @@ public class SelfRoleMembershipService
     private readonly ErrorHandlingService _errorHandlingService;
     private readonly ILogger<SelfRoleMembershipService> _logger;
     private readonly SelfRolesProvider _selfRolesProvider;
+    private readonly GuildsProvider _guildsProvider;
 
-    public SelfRoleMembershipService(ErrorHandlingService errorHandlingService, SelfRolesProvider selfRolesProvider, ILogger<SelfRoleMembershipService> logger)
+    public SelfRoleMembershipService(ErrorHandlingService errorHandlingService, SelfRolesProvider selfRolesProvider, ILogger<SelfRoleMembershipService> logger, GuildsProvider guildsProvider)
     {
         _errorHandlingService = errorHandlingService;
         _selfRolesProvider = selfRolesProvider;
         _logger = logger;
+        _guildsProvider = guildsProvider;
+    }
+
+    public Task HandleReactionToggled(DiscordGuild guild, DiscordChannel channel, DiscordMessage message, DiscordEmoji emoji, DiscordUser user)
+    {
+        try
+        {
+            return HandleReactionToggledInternal(guild, channel, message, emoji, user);
+        }
+        catch (Exception e)
+        {
+            return _errorHandlingService.Log(e, "HandleReactionToggled - SelfRoles");
+        }
     }
 
     public async Task Join(SelfRoleManagementAction request)
@@ -66,6 +81,56 @@ public class SelfRoleMembershipService
         {
             await LeaveRole(request.Member, discordRole);
             request.Responder.Respond(SelfRoleMessages.LeftRoleSuccess(request.Member.Mention, discordRole.Mention));
+        }
+    }
+    
+    private async Task HandleReactionToggledInternal(DiscordGuild guild, DiscordChannel channel, DiscordMessage message, DiscordEmoji emoji, DiscordUser user)
+    {
+        var selfRoleAssignmentMessage = _guildsProvider.GetGuildSelfRoleAssignmentMessageId(guild.Id);
+        if (!selfRoleAssignmentMessage.message.HasValue)
+        {
+            _logger.LogInformation("Skipping handling reaction as there is no self roles assignment message for this guild");
+            return;
+        }
+        if (channel.Id != selfRoleAssignmentMessage.channel || message.Id != selfRoleAssignmentMessage.message)
+        {
+            _logger.LogInformation("Skipping handling reaction as it is not a reaction on the guild's self roles assignment message");
+            return;
+        }
+
+        if (!_selfRolesProvider.TryGetGuildRoles(guild.Id, out var allRoles))
+        {
+            _logger.LogInformation("Skipping handling reaction there are no self roles to check");
+            return;
+        }
+
+        bool isAValidSelfRoleReaction = false;
+        foreach (var role in allRoles)
+        {
+            if (role.EmojiId.HasValue && role.EmojiId.Value == emoji.Id)
+            {
+                isAValidSelfRoleReaction = true;
+                await ToggleMembership((DiscordMember)user, role);
+                break;
+            }
+        }
+
+        if (!isAValidSelfRoleReaction)
+        {
+            await message.DeleteReactionAsync(emoji, user, "Not a valid self role reaction");
+        }
+    }
+
+    private async Task ToggleMembership(DiscordMember member, SelfRole role)
+    {
+        var discordRole = member.Guild.Roles.Values.FirstOrDefault(discordRole => discordRole.Id == role.DiscordRoleId);
+        if (member.Roles.Any(r => r.Id == role.DiscordRoleId))
+        {
+            await LeaveRole(member, discordRole);
+        }
+        else
+        {
+            await JoinRole(member, discordRole);
         }
     }
 

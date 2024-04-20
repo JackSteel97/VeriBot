@@ -17,6 +17,8 @@ public class SelfRole
 
     public long GuildRowId { get; set; }
     public Guild Guild { get; set; }
+    
+    public ulong? EmojiId { get; set; }
 
     /// <summary>
     ///     Empty constructor.
@@ -31,5 +33,15 @@ public class SelfRole
         CreatedAt = DateTime.UtcNow;
         GuildRowId = guildRowId;
         Description = description;
+    }
+    
+    public SelfRole(ulong discordId, string roleName, long guildRowId, string description, ulong? emojiId)
+    {
+        DiscordRoleId = discordId;
+        RoleName = roleName;
+        CreatedAt = DateTime.UtcNow;
+        GuildRowId = guildRowId;
+        Description = description;
+        EmojiId = emojiId;
     }
 }

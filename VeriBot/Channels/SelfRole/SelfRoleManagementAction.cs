@@ -16,12 +16,21 @@ public record SelfRoleManagementAction : BaseAction<SelfRoleActionType>
 {
     public string RoleName { get; }
     public string Description { get; }
+    public ulong? EmojiId { get; }
 
     public SelfRoleManagementAction(SelfRoleActionType action, IResponder responder, DiscordMember member, DiscordGuild guild, string roleName, string description)
         : base(action, responder, member, guild)
     {
         RoleName = roleName;
         Description = description;
+    }
+    
+    public SelfRoleManagementAction(SelfRoleActionType action, IResponder responder, DiscordMember member, DiscordGuild guild, string roleName, string description, ulong? emojiId)
+        : base(action, responder, member, guild)
+    {
+        RoleName = roleName;
+        Description = description;
+        EmojiId = emojiId;
     }
 
     public SelfRoleManagementAction(SelfRoleActionType action, IResponder responder, DiscordMember member, DiscordGuild guild, string roleName)

@@ -1,4 +1,6 @@
-﻿using DSharpPlus.Entities;
+﻿using DSharpPlus;
+using DSharpPlus.Entities;
+using System.Threading.Tasks;
 using VeriBot.DiscordModules.SelfRoles.Services;
 using VeriBot.Responders;
 
@@ -12,7 +14,7 @@ public class RolesDataHelper
     {
         _selfRoleViewingService = selfRoleViewingService;
     }
-
-    // TODO: Move to channel.
-    public void DisplayRoles(DiscordGuild guild, IResponder responder) => _selfRoleViewingService.DisplaySelfRoles(guild, responder);
+    
+    public void DisplayRoles(DiscordClient client, DiscordGuild guild, IResponder responder) => _selfRoleViewingService.DisplaySelfRoles(guild, responder, client);
+    public Task SendReactionMessage(DiscordClient client, DiscordGuild guild, DiscordChannel channel) => _selfRoleViewingService.SendReactionMessage(client, guild, channel);
 }

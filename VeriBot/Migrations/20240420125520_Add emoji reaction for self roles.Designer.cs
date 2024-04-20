@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VeriBot.Database;
@@ -11,9 +12,11 @@ using VeriBot.Database;
 namespace VeriBot.Migrations
 {
     [DbContext(typeof(VeriBotContext))]
-    partial class VeriBotContextModelSnapshot : ModelSnapshot
+    [Migration("20240420125520_Add emoji reaction for self roles")]
+    partial class Addemojireactionforselfroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,9 +158,6 @@ namespace VeriBot.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
-
-                    b.Property<decimal?>("SelfRolesAssignmentMessageChannelId")
-                        .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal?>("SelfRolesAssignmentMessageId")
                         .HasColumnType("numeric(20,0)");

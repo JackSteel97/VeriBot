@@ -43,7 +43,7 @@ public class RolesCommands : TypingCommandModule
     [Cooldown(1, 60, CooldownBucketType.Channel)]
     public Task ViewSelfRoles(CommandContext context)
     {
-        _dataHelpers.Roles.DisplayRoles(context.Guild, new MessageResponder(context, _errorHandlingService));
+        _dataHelpers.Roles.DisplayRoles(context.Client, context.Guild, new MessageResponder(context, _errorHandlingService));
         return Task.CompletedTask;
     }
 

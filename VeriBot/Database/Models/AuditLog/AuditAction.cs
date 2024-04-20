@@ -10,5 +10,6 @@ public enum AuditAction
     UsedCommand,
     UsedSlashCommand,
     ModalSubmitted,
-    MessageReactionAdded
+    MessageReactionAdded,
+    MessageReactionRemoved
 }

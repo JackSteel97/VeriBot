@@ -60,7 +60,7 @@ public class SelfRoleCreationService
     {
         if (_guildsProvider.TryGetGuild(request.Member.Guild.Id, out var guild))
         {
-            var role = new SelfRole(discordRole.Id, request.RoleName, guild.RowId, request.Description);
+            var role = new SelfRole(discordRole.Id, request.RoleName, guild.RowId, request.Description, request.EmojiId);
             await _selfRolesProvider.AddRole(guild.DiscordId, role);
 
             request.Responder.Respond(SelfRoleMessages.RoleCreatedSuccess(discordRole.Mention));

@@ -30,6 +30,9 @@ public class Guild
     [MaxLength(255)] public string Name { get; set; }
 
     public bool DadJokesEnabled { get; set; }
+    
+    public ulong? SelfRolesAssignmentMessageId { get; set; }
+    public ulong? SelfRolesAssignmentMessageChannelId { get; set; }
 
     /// <summary>
     ///     Empty constructor.

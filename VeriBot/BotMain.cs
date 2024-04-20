@@ -64,6 +64,7 @@ using VeriBot.DiscordModules.Pets;
 using VeriBot.DiscordModules.Puzzle;
 using VeriBot.DiscordModules.RankRoles;
 using VeriBot.DiscordModules.SelfRoles;
+using VeriBot.DiscordModules.SelfRoles.Services;
 using VeriBot.DiscordModules.Stats;
 using VeriBot.DiscordModules.Triggers;
 using VeriBot.DiscordModules.Utility;
@@ -99,6 +100,7 @@ public class BotMain : IHostedService
     private readonly ErrorHandlingAsynchronousCommandExecutor _commandExecutor;
     private readonly AuditLogService _auditLogService;
     private readonly UserTrackingService _userTrackingService;
+    private readonly SelfRoleMembershipService _selfRoleMembershipService;
 
     // Channels
     private readonly VoiceStateChannel _voiceStateChannel;
@@ -129,7 +131,8 @@ public class BotMain : IHostedService
         PuzzleCommandsChannel puzzleCommandsChannel,
         AuditLogService auditLogService,
         UserTrackingService userTrackingService,
-        GuildMemberUpdatedChannel memberUpdatedChannel)
+        GuildMemberUpdatedChannel memberUpdatedChannel,
+        SelfRoleMembershipService selfRoleMembershipService)
     {
         _appConfigurationService = appConfigurationService;
         _logger = logger;
@@ -151,6 +154,7 @@ public class BotMain : IHostedService
         _auditLogService = auditLogService;
         _userTrackingService = userTrackingService;
         _memberUpdatedChannel = memberUpdatedChannel;
+        _selfRoleMembershipService = selfRoleMembershipService;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -219,6 +223,7 @@ public class BotMain : IHostedService
         _client.GuildAvailable += HandleGuildAvailable;
         _client.GuildMemberAdded += HandleGuildMemberAdded;
         _client.MessageReactionAdded += HandleMessageReactionAdded;
+        _client.MessageReactionRemoved += HandleMessageReactionRemoved;
         _client.GuildMemberUpdated += HandleGuildMemberUpdated;
 
         _commands.CommandErrored += HandleCommandErrored;
@@ -240,10 +245,20 @@ public class BotMain : IHostedService
         await _cache.CommandStatistics.IncrementCommandStatistic(e.Context.QualifiedName);
     }
 
+    private async Task HandleMessageReactionRemoved(DiscordClient sender, MessageReactionRemoveEventArgs e)
+    {
+        if (e.User.IsBot || e.User.Id == sender.CurrentUser.Id) return;
+        await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
+        await _auditLogService.MessageReactionRemoved(e);
+        await _selfRoleMembershipService.HandleReactionToggled(e.Guild, e.Channel, e.Message, e.Emoji, e.User);
+    }
+    
     private async Task HandleMessageReactionAdded(DiscordClient sender, MessageReactionAddEventArgs e)
     {
+        if (e.User.IsBot || e.User.Id == sender.CurrentUser.Id) return;
         await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
         await _auditLogService.MessageReactionAdded(e);
+        await _selfRoleMembershipService.HandleReactionToggled(e.Guild, e.Channel, e.Message, e.Emoji, e.User);
     }
 
 
