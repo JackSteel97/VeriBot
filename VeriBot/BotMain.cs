@@ -247,16 +247,16 @@ public class BotMain : IHostedService
 
     private async Task HandleMessageReactionRemoved(DiscordClient sender, MessageReactionRemoveEventArgs e)
     {
-        if (e.User.IsBot || e.User.Id == sender.CurrentUser.Id) return;
-        await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
+        var continuationAllowed = await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
+        if (!continuationAllowed) return;
         await _auditLogService.MessageReactionRemoved(e);
         await _selfRoleMembershipService.HandleReactionToggled(e.Guild, e.Channel, e.Message, e.Emoji, e.User);
     }
     
     private async Task HandleMessageReactionAdded(DiscordClient sender, MessageReactionAddEventArgs e)
     {
-        if (e.User.IsBot || e.User.Id == sender.CurrentUser.Id) return;
-        await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
+        var continuationAllowed = await _userTrackingService.TrackUser(e.Guild.Id, e.User, e.Guild, sender);
+        if (!continuationAllowed) return;
         await _auditLogService.MessageReactionAdded(e);
         await _selfRoleMembershipService.HandleReactionToggled(e.Guild, e.Channel, e.Message, e.Emoji, e.User);
     }

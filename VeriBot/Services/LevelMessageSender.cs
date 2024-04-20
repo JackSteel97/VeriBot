@@ -50,6 +50,23 @@ public class LevelMessageSender
                 .FireAndForget(_errorHandlingService);
         }
     }
+    
+    public void SendTrustedMessage(DiscordGuild discordGuild, DiscordUser discordUser)
+    {
+        if (_guildsProvider.TryGetGuild(discordGuild.Id, out var guild) && _usersProvider.TryGetUser(discordGuild.Id, discordUser.Id, out var user))
+        {
+            var channel = guild.GetLevelAnnouncementChannel(discordGuild);
+
+            if (channel == null) return;
+
+            string content = "";
+            if (!user.OptedOutOfMentions) content = discordUser.Mention;
+            channel.SendMessageAsync(content,
+                    EmbedGenerator.Info($"{discordUser.Mention} has been a member for more than a week and therefore has been granted the `Trusted` role", "Trusted User!",
+                        "Anti-Spam services brought to you by VeriBot :)"))
+                .FireAndForget(_errorHandlingService);
+        }
+    }
 
     public void SendPetDiedMessage(DiscordGuild discordGuild, DiscordUser discordUser, Pet pet)
     {
