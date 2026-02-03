@@ -12,7 +12,7 @@ public class MemberUpdatedHandler
 {
     private readonly NotifierService _notifierService;
     private readonly ILogger<MemberUpdatedHandler> _logger;
-    private static readonly HashSet<ulong> _triggerRoleIds = new() { 1136781629948428369, 1161704036244930661, 1289155977471463468  };
+    private static readonly HashSet<ulong> _triggerRoleIds = new() { 1136781629948428369, 1161704036244930661, 1289155977471463468, 1281720567292104725, 1468241550424281208, 1316830119364399154  };
     private const ulong _newRoleId = 1137369187652747295;
     
     public MemberUpdatedHandler(NotifierService notifierService, ILogger<MemberUpdatedHandler> logger)
